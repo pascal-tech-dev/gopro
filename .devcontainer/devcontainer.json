@@ -1,0 +1,31 @@
+{
+  "name": "GoPro Workspace",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
+  // Mount your workspace into the same path as Dockerfile's WORKDIR
+  "workspaceFolder": "/workspace/${localWorkspaceFolderBasename}",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace/${localWorkspaceFolderBasename},type=bind,consistency=cached",
+  "customizations": {
+    "vscode": {
+        "settings": {
+        "go.formatTool": "gofmt",
+        "go.lintTool": "golangci-lint"
+      },
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "eamodio.gitlens",
+        "ms-azuretools.vscode-docker"
+      ]
+    }
+  },
+ "forwardPorts": [8080],      // Localhost:8080 → Container:8080
+  "remoteUser": "vscode",
+  "postCreateCommand": "go version && go env",
+  "mounts": [
+    // Go modules önbelleği için
+    "source=${localEnv:GOPATH}/pkg/mod,target=/go/pkg/mod,type=bind,consistency=cached"
+  ]
+}
